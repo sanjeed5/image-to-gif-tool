@@ -66,31 +66,46 @@ const ImageToGifTool = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    const totalFrames = 60;
-    const framesPerSide = totalFrames / 2;
+    const totalFrames = 120; // 4 seconds total at 30fps
+    const frontDuration = 60; // 2 seconds for front side
+    const transitionFrames = 30; // 1 second for transition
+    const backDuration = 60; // 1 second for back side
 
     for (let i = 0; i < totalFrames; i++) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      const progress = i / (totalFrames - 1);
-      const rotation = progress * Math.PI;
-      
-      ctx.save();
-      ctx.translate(canvas.width / 2, canvas.height / 2);
-      ctx.rotate(rotation);
-      ctx.translate(-canvas.width / 2, -canvas.height / 2);
-      
-      if (progress < 0.5) {
+      if (i < frontDuration) {
+        // Show front side for 2 seconds
         ctx.drawImage(frontImageRef.current, 0, 0, canvas.width, canvas.height);
+      } else if (i < frontDuration + transitionFrames) {
+        // Transition period
+        const progress = (i - frontDuration) / transitionFrames;
+        const scale = Math.cos(progress * Math.PI);
+        
+        ctx.save();
+        ctx.translate(canvas.width / 2, 0);
+        ctx.scale(scale, 1);
+        ctx.translate(-canvas.width / 2, 0);
+        
+        if (scale > 0) {
+          ctx.drawImage(frontImageRef.current, 0, 0, canvas.width, canvas.height);
+        } else {
+          ctx.scale(-1, 1);
+          ctx.translate(-canvas.width, 0);
+          ctx.drawImage(backImageRef.current, 0, 0, canvas.width, canvas.height);
+        }
+        
+        ctx.restore();
       } else {
+        // Show back side for remaining time
+        ctx.save();
         ctx.scale(-1, 1);
         ctx.translate(-canvas.width, 0);
         ctx.drawImage(backImageRef.current, 0, 0, canvas.width, canvas.height);
+        ctx.restore();
       }
-      
-      ctx.restore();
 
-      gif.addFrame(ctx, { copy: true, delay: 50 });
+      gif.addFrame(ctx, { copy: true, delay: 33 }); // ~30fps
     }
 
     gif.on('finished', (blob) => {
