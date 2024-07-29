@@ -1,4 +1,4 @@
-"homepage": "flipgifs.sanjeed.in"
+"homepage": "[flipgifs.sanjeed.in](flipgifs.sanjeed.in)"
 
 # Getting Started with Create React App
 
