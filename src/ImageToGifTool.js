@@ -60,7 +60,7 @@ const ImageToGifTool = () => {
       quality: 10,
       width: 300,
       height: 200,
-      workerScript: process.env.PUBLIC_URL + '/gif.worker.js',
+      workerScript: '/image-to-gif-tool/gif.worker.js',
     });
 
     const canvas = canvasRef.current;
