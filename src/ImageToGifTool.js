@@ -60,7 +60,7 @@ const ImageToGifTool = () => {
       quality: 10,
       width: 300,
       height: 200,
-      workerScript: 'flipgifs.sanjeed.in/gif.worker.js',
+      workerScript: '/gif.worker.js',
     });
 
     const canvas = canvasRef.current;
