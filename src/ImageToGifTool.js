@@ -169,6 +169,11 @@ const ImageToGifTool = () => {
       )}
       
       <canvas ref={canvasRef} style={{ display: 'none' }} width={300} height={200} />
+      
+      <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '14px', color: '#666' }}>
+        Created by <a href="https://github.com/sanjeed5" target="_blank" rel="noopener noreferrer">sanjeed5</a> |{' '}
+        <a href="https://github.com/sanjeed5/image-to-gif-tool" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+      </div>
     </div>
   );
 };
