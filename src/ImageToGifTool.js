@@ -66,42 +66,40 @@ const ImageToGifTool = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    const totalFrames = 120; // 4 seconds total at 30fps
-    const frontDuration = 60; // 2 seconds for front side
-    const transitionFrames = 30; // 1 second for transition
-    const backDuration = 60; // 1 second for back side
+    const totalFrames = 240; // 8 seconds total at 30fps
+    const sideDuration = 60; // 2 seconds for each side
+    const transitionFrames = 60; // 2 seconds for each transition
+
+    const easeInOutQuad = t => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 
     for (let i = 0; i < totalFrames; i++) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      if (i < frontDuration) {
-        // Show front side for 2 seconds
-        ctx.drawImage(frontImageRef.current, 0, 0, canvas.width, canvas.height);
-      } else if (i < frontDuration + transitionFrames) {
+      const cycle = Math.floor(i / (sideDuration + transitionFrames));
+      const cycleFrame = i % (sideDuration + transitionFrames);
+
+      if (cycleFrame < sideDuration) {
+        // Show current side
+        ctx.drawImage(cycle % 2 === 0 ? frontImageRef.current : backImageRef.current, 0, 0, canvas.width, canvas.height);
+      } else {
         // Transition period
-        const progress = (i - frontDuration) / transitionFrames;
-        const scale = Math.cos(progress * Math.PI);
+        const progress = (cycleFrame - sideDuration) / transitionFrames;
+        const easedProgress = easeInOutQuad(progress);
+        const scale = Math.cos(easedProgress * Math.PI);
         
         ctx.save();
         ctx.translate(canvas.width / 2, 0);
-        ctx.scale(scale, 1);
+        ctx.scale(Math.abs(scale), 1);
         ctx.translate(-canvas.width / 2, 0);
         
         if (scale > 0) {
-          ctx.drawImage(frontImageRef.current, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(cycle % 2 === 0 ? frontImageRef.current : backImageRef.current, 0, 0, canvas.width, canvas.height);
         } else {
+          ctx.translate(canvas.width, 0);
           ctx.scale(-1, 1);
-          ctx.translate(-canvas.width, 0);
-          ctx.drawImage(backImageRef.current, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(cycle % 2 === 0 ? backImageRef.current : frontImageRef.current, 0, 0, canvas.width, canvas.height);
         }
         
-        ctx.restore();
-      } else {
-        // Show back side for remaining time
-        ctx.save();
-        ctx.scale(-1, 1);
-        ctx.translate(-canvas.width, 0);
-        ctx.drawImage(backImageRef.current, 0, 0, canvas.width, canvas.height);
         ctx.restore();
       }
 
