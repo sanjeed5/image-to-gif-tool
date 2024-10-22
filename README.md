@@ -1,6 +1,8 @@
-"homepage": "[flipgifs.sanjeed.in](flipgifs.sanjeed.in)"
+# Demo: [flipgifs.sanjeed.in](flipgifs.sanjeed.in)
 
 Made this as a quick MVP for a PM friend who wanted to make a case to his team. Hacked it in a few minutes using AI of course. 
+
+---
 
 # Getting Started with Create React App
 
